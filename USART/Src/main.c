@@ -39,6 +39,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f4xx_hal.h"
+#include "string.h"
 
 /* USER CODE BEGIN Includes */
 
@@ -99,6 +100,8 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_USART2_UART_Init();
+	
+	
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -110,9 +113,8 @@ int main(void)
   while (1)
   {
 
-  /* USER CODE END WHILE */
-
-  /* USER CODE BEGIN 3 */
+  HAL_UART_Receive_DMA(&huart2,(uint8_t *)rxData,31);
+	HAL_Delay(10);
 
   }
   /* USER CODE END 3 */
@@ -217,7 +219,16 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(huart);
+  /* NOTE: This function Should not be modified, when the callback is needed,
+           the HAL_UART_TxCpltCallback could be implemented in the user file
+   */
+	HAL_UART_Transmit(&huart2,(uint8_t *)txData,strlen(txData),10);
+	HAL_Delay(10);
+}
 /* USER CODE END 4 */
 
 /**
